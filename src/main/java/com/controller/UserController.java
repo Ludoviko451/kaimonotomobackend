@@ -42,6 +42,13 @@ public class UserController {
 		return userRepository.findAll();
 	}
 
+	@GetMapping("/{id}")
+	public User getById(@PathVariable String id) {
+		return userRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
+}
+
+
 	@ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/users")
     public User create(@RequestBody User tienda) {
@@ -71,36 +78,113 @@ public class UserController {
 
 
 	@PostMapping("/users/{id}/addProducts")
-	public ResponseEntity<User> agregarProductos(@PathVariable String id, @RequestBody List<Map<String, Object>> nuevosProductos) {
+	public ResponseEntity<User> agregarProductos(@PathVariable String id, @RequestBody List<Product> nuevosProductos) {
 		User tienda = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Tienda no encontrada con ID: " + id));
 	
 		List<Product> productosActuales = tienda.getProductos();
+	
 		if (productosActuales == null) {
 			productosActuales = new ArrayList<>();
 		}
 	
-		ObjectMapper objectMapper = new ObjectMapper();
-		for (Map<String, Object> productoMap : nuevosProductos) {
-			Product nuevoProducto = objectMapper.convertValue(productoMap, Product.class);
-	
-			// Verificar si la clave de la ID está presente en el mapa y asignarla manualmente al objeto Product
-			if (productoMap.containsKey("id")) {
-				String productId = productoMap.get("id").toString();
-				nuevoProducto.setId(productId);
-			}
-	
-			productosActuales.add(nuevoProducto);
-		}
-	
+		productosActuales.addAll(nuevosProductos);
 		tienda.setProductos(productosActuales);
 		userRepository.save(tienda);
 	
 		return ResponseEntity.ok(tienda);
 	}
 	
+
+	@PostMapping("/users/{id}/addProduct")
+	public ResponseEntity<User> addProduct(@PathVariable String id, @RequestBody Product nuevoProducto) {
+		User tienda = userRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Tienda no encontrada con ID: " + id));
 	
+		List<Product> productosActuales = tienda.getProductos();
 	
+		if (productosActuales == null) {
+			productosActuales = new ArrayList<>();
+		}
+	
+		productosActuales.add(nuevoProducto);
+		tienda.setProductos(productosActuales);
+		userRepository.save(tienda);
+	
+		return ResponseEntity.ok(tienda);
+	}
+	
+
+	@PostMapping("/login")
+	public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
+		String id = credentials.get("id");
+	
+		// Buscar el usuario por ID en lugar de nombre de usuario (o ID)
+		User user = userRepository.findById(id).orElse(null);
+		
+		if (user != null && user.getId().equals(id)) {
+			// Autenticación exitosa, devolver los datos del usuario
+			return ResponseEntity.ok(user);
+		} else {
+			// Autenticación fallida
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
+		}
+	}
+
+	@DeleteMapping("/users/{userId}/products/{productId}")
+	public ResponseEntity<?> eliminarProducto(@PathVariable String userId, @PathVariable String productId) {
+		User tienda = userRepository.findById(userId)
+				.orElseThrow(() -> new ResourceNotFoundException("Tienda no encontrada con ID: " + userId));
+	
+		List<Product> productosActuales = tienda.getProductos();
+	
+		if (productosActuales != null) {
+			productosActuales.removeIf(producto -> producto.getId().equals(productId));
+			tienda.setProductos(productosActuales);
+			userRepository.save(tienda);
+			return ResponseEntity.ok(tienda);
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron productos para eliminar");
+		}
+	}
+	
+	@PutMapping("/users/{userId}/products/{productId}")
+	public ResponseEntity<?> actualizarProducto(@PathVariable String userId, @PathVariable String productId, @RequestBody Product nuevoProducto) {
+		User tienda = userRepository.findById(userId)
+				.orElseThrow(() -> new ResourceNotFoundException("Tienda no encontrada con ID: " + userId));
+	
+		List<Product> productosActuales = tienda.getProductos();
+	
+		if (productosActuales != null) {
+			for (Product producto : productosActuales) {
+				if (producto.getId().equals(productId)) {
+					if (nuevoProducto != null) {
+						if (nuevoProducto.getNombre() != null) {
+							producto.setNombre(nuevoProducto.getNombre());
+						}
+						if (nuevoProducto.getPrecio() != 0.0) {
+							producto.setPrecio(nuevoProducto.getPrecio());
+						}
+						if (nuevoProducto.getDescripcion() != null) {
+							producto.setDescripcion(nuevoProducto.getDescripcion());
+						}
+						if (nuevoProducto.getImagen() != null) {
+							producto.setImagen(nuevoProducto.getImagen());
+						}
+	
+						// Guardar la tienda actualizada
+						userRepository.save(tienda);
+						return ResponseEntity.ok(producto);
+					} else {
+						return ResponseEntity.badRequest().body("El objeto nuevoProducto es nulo");
+					}
+				}
+			}
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró el producto con ID: " + productId);
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron productos para actualizar");
+		}
+	}
 
 	
 }

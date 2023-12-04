@@ -12,8 +12,17 @@ public class Product {
     private String nombre;
     private double precio;
     private String descripcion;
+    private String imagen;
 
     // Constructores, getters, setters, etc.
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
 
     // Constructor sin argumentos
     public Product() {
@@ -21,10 +30,11 @@ public class Product {
     }
 
     // Constructor con argumentos
-    public Product(String nombre, double precio, String descripcion) {
+    public Product(String nombre, double precio, String descripcion, String imagen) {
         this.nombre = nombre;
         this.precio = precio;
         this.descripcion = descripcion;
+        this.imagen = imagen;
         this.id = UUID.randomUUID().toString(); // Asignar un ID único al crear un nuevo producto
     }
 
