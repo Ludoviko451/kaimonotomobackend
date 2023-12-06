@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "users")
+@Document(collection = "tiendas")
 public class User {
 
 	@Id
@@ -13,15 +13,12 @@ public class User {
 	private String nombre;
 	private String direccion;
 	private String paginaWeb;
+	private String correo;
 	private boolean estado = true;
-	private List<Product> productos;
 	
-	public List<Product> getProductos() {
-		return productos;
-	}
-	public void setProductos(List<Product> productos) {
-		this.productos = productos;
-	}
+	
+
+
 	public User(String nombre, String direccion, String paginaWeb, boolean estado) {
 		super();
 		this.nombre = nombre;
@@ -31,6 +28,7 @@ public class User {
 	public User() {
 
 	}
+
 	public String getId() {
 		return id;
 	}
@@ -60,5 +58,12 @@ public class User {
 	}
 	public void setEstado(boolean estado) {
 		this.estado = estado;
+	}
+
+	public String getCorreo() {
+		return correo;
+	}
+	public void setCorreo(String correo) {
+		this.correo = correo;
 	}
 }

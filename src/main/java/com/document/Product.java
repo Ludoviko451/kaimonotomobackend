@@ -1,11 +1,14 @@
 package com.document;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import com.document.User;
 
+import java.util.List;
 import java.util.UUID;
 
 @Document(collection = "productos")
 public class Product {
+
 
     @Id
     private String id;
@@ -13,16 +16,17 @@ public class Product {
     private double precio;
     private String descripcion;
     private String imagen;
+    private String idTienda;
 
+
+    private List<String> etiquetas;
     // Constructores, getters, setters, etc.
 
-    public String getImagen() {
-        return imagen;
-    }
 
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
-    }
+
+
+
+
 
     // Constructor sin argumentos
     public Product() {
@@ -70,6 +74,28 @@ public class Product {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+    
+    public String getImagen() {
+        return imagen;
+    }
 
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
 
+    public String getIdTienda() {
+        return idTienda;
+    }
+
+    public void setIdTienda(String idTienda) {
+        this.idTienda = idTienda;
+    }
+
+    public List<String> getEtiquetas() {
+        return etiquetas;
+    }
+
+    public void setEtiquetas(List<String> etiquetas) {
+        this.etiquetas = etiquetas;
+    }
 }

@@ -77,42 +77,42 @@ public class UserController {
     }
 
 
-	@PostMapping("/users/{id}/addProducts")
-	public ResponseEntity<User> agregarProductos(@PathVariable String id, @RequestBody List<Product> nuevosProductos) {
-		User tienda = userRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Tienda no encontrada con ID: " + id));
+	// @PostMapping("/users/{id}/addProducts")
+	// public ResponseEntity<User> agregarProductos(@PathVariable String id, @RequestBody List<Product> nuevosProductos) {
+	// 	User tienda = userRepository.findById(id)
+	// 			.orElseThrow(() -> new ResourceNotFoundException("Tienda no encontrada con ID: " + id));
 	
-		List<Product> productosActuales = tienda.getProductos();
+	// 	List<Product> productosActuales = tienda.getProductos();
 	
-		if (productosActuales == null) {
-			productosActuales = new ArrayList<>();
-		}
+	// 	if (productosActuales == null) {
+	// 		productosActuales = new ArrayList<>();
+	// 	}
 	
-		productosActuales.addAll(nuevosProductos);
-		tienda.setProductos(productosActuales);
-		userRepository.save(tienda);
+	// 	productosActuales.addAll(nuevosProductos);
+	// 	tienda.setProductos(productosActuales);
+	// 	userRepository.save(tienda);
 	
-		return ResponseEntity.ok(tienda);
-	}
+	// 	return ResponseEntity.ok(tienda);
+	// }
 	
 
-	@PostMapping("/users/{id}/addProduct")
-	public ResponseEntity<User> addProduct(@PathVariable String id, @RequestBody Product nuevoProducto) {
-		User tienda = userRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Tienda no encontrada con ID: " + id));
+	// @PostMapping("/users/{id}/addProduct")
+	// public ResponseEntity<User> addProduct(@PathVariable String id, @RequestBody Product nuevoProducto) {
+	// 	User tienda = userRepository.findById(id)
+	// 			.orElseThrow(() -> new ResourceNotFoundException("Tienda no encontrada con ID: " + id));
 	
-		List<Product> productosActuales = tienda.getProductos();
+	// 	List<Product> productosActuales = tienda.getProductos();
 	
-		if (productosActuales == null) {
-			productosActuales = new ArrayList<>();
-		}
+	// 	if (productosActuales == null) {
+	// 		productosActuales = new ArrayList<>();
+	// 	}
 	
-		productosActuales.add(nuevoProducto);
-		tienda.setProductos(productosActuales);
-		userRepository.save(tienda);
+	// 	productosActuales.add(nuevoProducto);
+	// 	tienda.setProductos(productosActuales);
+	// 	userRepository.save(tienda);
 	
-		return ResponseEntity.ok(tienda);
-	}
+	// 	return ResponseEntity.ok(tienda);
+	// }
 	
 
 	@PostMapping("/login")
@@ -131,60 +131,60 @@ public class UserController {
 		}
 	}
 
-	@DeleteMapping("/users/{userId}/products/{productId}")
-	public ResponseEntity<?> eliminarProducto(@PathVariable String userId, @PathVariable String productId) {
-		User tienda = userRepository.findById(userId)
-				.orElseThrow(() -> new ResourceNotFoundException("Tienda no encontrada con ID: " + userId));
+	// @DeleteMapping("/users/{userId}/products/{productId}")
+	// public ResponseEntity<?> eliminarProducto(@PathVariable String userId, @PathVariable String productId) {
+	// 	User tienda = userRepository.findById(userId)
+	// 			.orElseThrow(() -> new ResourceNotFoundException("Tienda no encontrada con ID: " + userId));
 	
-		List<Product> productosActuales = tienda.getProductos();
+	// 	List<Product> productosActuales = tienda.getProductos();
 	
-		if (productosActuales != null) {
-			productosActuales.removeIf(producto -> producto.getId().equals(productId));
-			tienda.setProductos(productosActuales);
-			userRepository.save(tienda);
-			return ResponseEntity.ok(tienda);
-		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron productos para eliminar");
-		}
-	}
+	// 	if (productosActuales != null) {
+	// 		productosActuales.removeIf(producto -> producto.getId().equals(productId));
+	// 		tienda.setProductos(productosActuales);
+	// 		userRepository.save(tienda);
+	// 		return ResponseEntity.ok(tienda);
+	// 	} else {
+	// 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron productos para eliminar");
+	// 	}
+	// }
 	
-	@PutMapping("/users/{userId}/products/{productId}")
-	public ResponseEntity<?> actualizarProducto(@PathVariable String userId, @PathVariable String productId, @RequestBody Product nuevoProducto) {
-		User tienda = userRepository.findById(userId)
-				.orElseThrow(() -> new ResourceNotFoundException("Tienda no encontrada con ID: " + userId));
+	// @PutMapping("/users/{userId}/products/{productId}")
+	// public ResponseEntity<?> actualizarProducto(@PathVariable String userId, @PathVariable String productId, @RequestBody Product nuevoProducto) {
+	// 	User tienda = userRepository.findById(userId)
+	// 			.orElseThrow(() -> new ResourceNotFoundException("Tienda no encontrada con ID: " + userId));
 	
-		List<Product> productosActuales = tienda.getProductos();
+	// 	List<Product> productosActuales = tienda.getProductos();
 	
-		if (productosActuales != null) {
-			for (Product producto : productosActuales) {
-				if (producto.getId().equals(productId)) {
-					if (nuevoProducto != null) {
-						if (nuevoProducto.getNombre() != null) {
-							producto.setNombre(nuevoProducto.getNombre());
-						}
-						if (nuevoProducto.getPrecio() != 0.0) {
-							producto.setPrecio(nuevoProducto.getPrecio());
-						}
-						if (nuevoProducto.getDescripcion() != null) {
-							producto.setDescripcion(nuevoProducto.getDescripcion());
-						}
-						if (nuevoProducto.getImagen() != null) {
-							producto.setImagen(nuevoProducto.getImagen());
-						}
+	// 	if (productosActuales != null) {
+	// 		for (Product producto : productosActuales) {
+	// 			if (producto.getId().equals(productId)) {
+	// 				if (nuevoProducto != null) {
+	// 					if (nuevoProducto.getNombre() != null) {
+	// 						producto.setNombre(nuevoProducto.getNombre());
+	// 					}
+	// 					if (nuevoProducto.getPrecio() != 0.0) {
+	// 						producto.setPrecio(nuevoProducto.getPrecio());
+	// 					}
+	// 					if (nuevoProducto.getDescripcion() != null) {
+	// 						producto.setDescripcion(nuevoProducto.getDescripcion());
+	// 					}
+	// 					if (nuevoProducto.getImagen() != null) {
+	// 						producto.setImagen(nuevoProducto.getImagen());
+	// 					}
 	
-						// Guardar la tienda actualizada
-						userRepository.save(tienda);
-						return ResponseEntity.ok(producto);
-					} else {
-						return ResponseEntity.badRequest().body("El objeto nuevoProducto es nulo");
-					}
-				}
-			}
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró el producto con ID: " + productId);
-		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron productos para actualizar");
-		}
-	}
+	// 					// Guardar la tienda actualizada
+	// 					userRepository.save(tienda);
+	// 					return ResponseEntity.ok(producto);
+	// 				} else {
+	// 					return ResponseEntity.badRequest().body("El objeto nuevoProducto es nulo");
+	// 				}
+	// 			}
+	// 		}
+	// 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró el producto con ID: " + productId);
+	// 	} else {
+	// 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron productos para actualizar");
+	// 	}
+	// }
 
 	
 }
