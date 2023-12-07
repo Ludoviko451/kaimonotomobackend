@@ -1,15 +1,21 @@
 package com.controller;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.repository.ProductRepository;
 import com.repository.UserRepository;
 import com.document.User;
+import com.services.ProductService;
 import com.document.Product;
 
 @CrossOrigin(origins = "*", maxAge = 4800)
@@ -21,6 +27,14 @@ public class ProductController {
     private  ProductRepository productRepository;
     @Autowired
     private  UserRepository userRepository;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
+
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{idTienda}/products")
@@ -112,6 +126,54 @@ public class ProductController {
         }
     }
 
+    // @GetMapping("/search")
+    // public ResponseEntity<Product> searchProducts(
+    //         @RequestParam(name = "text", required = false) String searchText,
+    //         @RequestParam(name = "tags", required = false) List<String> tags) {
+
+    //     if (searchText != null && tags != null && !tags.isEmpty()) {
+    //         // Si ambos están presentes, realiza una búsqueda combinada
+    //         Product cheapestProductCombined = productService.findCheapestProductCombined(searchText, tags);
+    //         if (cheapestProductCombined != null) {
+    //             return ResponseEntity.ok(cheapestProductCombined);
+    //         } else {
+    //             return ResponseEntity.notFound().build();
+    //         }
+    //     } else if (searchText != null) {
+    //         // Si solo hay texto, realiza una búsqueda por texto
+    //         Product cheapestProductByText = productService.findCheapestProductByText(searchText);
+    //         if (cheapestProductByText != null) {
+    //             return ResponseEntity.ok(cheapestProductByText);
+    //         } else {
+    //             return ResponseEntity.notFound().build();
+    //         }
+    //     } else if (tags != null && !tags.isEmpty()) {
+    //         // Si solo hay etiquetas, realiza una búsqueda por etiquetas
+    //         Product cheapestProductByTags = productService.findCheapestProductByTags(tags);
+    //         if (cheapestProductByTags != null) {
+    //             return ResponseEntity.ok(cheapestProductByTags);
+    //         } else {
+    //             return ResponseEntity.notFound().build();
+    //         }
+    //     } else {
+    //         // Si no se proporciona ningún parámetro, devuelve un error
+    //         return ResponseEntity.badRequest().build();
+    //     }
+    // }
+
+    @GetMapping("/byName/{name}")
+    public Optional<Product> findCheapestProductByName(@PathVariable String name) {
+        return productRepository.findFirstByNombreOrderByPrecioAsc(name);
+    }
+
+    @GetMapping("/allbyName/{name}")
+    public List<Product> findProductsByName(@PathVariable String name) {
+        return productRepository.findAllByNombre(name);
+    }
+}
+
+
+
+
     
 
-}
