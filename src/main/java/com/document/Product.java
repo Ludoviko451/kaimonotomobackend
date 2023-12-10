@@ -17,9 +17,7 @@ public class Product {
     private String descripcion;
     private String imagen;
     private String idTienda;
-
-
-    private List<String> etiquetas;
+    private List<String> tags;
     // Constructores, getters, setters, etc.
 
 
@@ -92,10 +90,10 @@ public class Product {
     }
 
     public List<String> getEtiquetas() {
-        return etiquetas;
+        return tags;
     }
 
-    public void setEtiquetas(List<String> etiquetas) {
-        this.etiquetas = etiquetas;
+    public void setEtiquetas(List<String> tags) {
+        this.tags = tags;
     }
 }

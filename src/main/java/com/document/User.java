@@ -14,6 +14,8 @@ public class User {
 	private String direccion;
 	private String paginaWeb;
 	private String correo;
+	private String celular;
+	private String imagen;
 	private boolean estado = true;
 	
 	
@@ -66,4 +68,17 @@ public class User {
 	public void setCorreo(String correo) {
 		this.correo = correo;
 	}
+		public String getCelular() {
+		return celular;
+	}
+	public void setCelular(String celular) {
+		this.celular = celular;
+	}
+
+	public String getImagen() {
+		return imagen;
+	}
+	public void setImagen(String imagen) {
+		this.imagen = imagen;
+	}	
 }

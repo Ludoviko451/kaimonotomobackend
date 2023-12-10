@@ -42,6 +42,7 @@ public class ProductController {
         User tienda = userRepository.findById(idTienda)
                 .orElseThrow(() -> new RuntimeException("Tienda no encontrada"));
         producto.setIdTienda(tienda.getId());
+        System.out.println(producto);
         return productRepository.save(producto);
     }
 
@@ -93,7 +94,11 @@ public class ProductController {
             if (UpdatedProduct.getImagen() != null) {
                 producto.setImagen(UpdatedProduct.getImagen());
             }
+            if (UpdatedProduct.getEtiquetas() != null){
+                producto.setEtiquetas(UpdatedProduct.getEtiquetas());
+            }
         }
+        System.out.println(producto);
         return productRepository.save(producto);
     }
 
@@ -170,6 +175,17 @@ public class ProductController {
     public List<Product> findProductsByName(@PathVariable String name) {
         return productRepository.findAllByNombre(name);
     }
+
+    @GetMapping("/byTags")
+    public List<Product> findProductsByTags(@RequestParam List<String> tags) {
+        try {
+            return productRepository.findByTagsIn(tags);
+        } catch (Exception e) {
+            // Manejar la excepción si ocurre un error
+            return Collections.emptyList(); // Devuelve una lista vacía en caso de error
+        }
+    }
+    
 }
 
 

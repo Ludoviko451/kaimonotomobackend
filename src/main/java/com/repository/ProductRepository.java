@@ -24,4 +24,7 @@ public interface ProductRepository extends MongoRepository<Product, String> {
 
     @Query(value = "{$group: {_id: '$nombre', minPrice: {$min: '$precio'}}}")
     List<Product> findAllCheapestProducts();
+
+   
+    List<Product> findByTagsIn(List<String> tags);
 }
