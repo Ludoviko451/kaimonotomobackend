@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -173,8 +176,13 @@ public class ProductController {
 
     @GetMapping("/allbyName/{name}")
     public List<Product> findProductsByName(@PathVariable String name) {
-        return productRepository.findAllByNombre(name);
+        // Crear una expresión regular para buscar cualquier coincidencia parcial del nombre
+        Pattern pattern = Pattern.compile(".*" + name + ".*", Pattern.CASE_INSENSITIVE);
+        Query query = new Query(Criteria.where("nombre").regex(pattern));
+
+        return mongoTemplate.find(query, Product.class);
     }
+
 
     @GetMapping("/byTags")
     public List<Product> findProductsByTags(@RequestParam List<String> tags) {
